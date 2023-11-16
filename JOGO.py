@@ -17,16 +17,16 @@ background = pygame.transform.scale(background, (WIDTH,HEIGHT))
 zumbi_img = pygame.image.load('zumbi.png').convert_alpha()
 zumbi_img = pygame.transform.scale(zumbi_img, (largura_zumbi,altura_zumbi))
 
-class zumbi(pygame.sprite.Sprite):
+class Zumbi(pygame.sprite.Sprite):
     def __init__(self, img):
         pygame.sprite.Sprite.__init__(self)
         
         self.image = img
         self.rect = self.image.get_rect()
         self.rect.x = random.randint(100, 900)
-        self.rect.y = 600
-        self.speedx = 0.05
-        self.speedy = 1
+        self.rect.y = 500
+        self.speedx = 0.3
+        self.speedy = 6
     
     def update(self):
         self.rect.x += self.speedx
@@ -34,14 +34,16 @@ class zumbi(pygame.sprite.Sprite):
 
         if self.rect.top > HEIGHT:
             self.rect.x = random.randint(0, WIDTH - largura_zumbi)
-            self.rect.y = 600
+            self.rect.y = 500
 
 game = True
 clock = pygame.time.Clock()
-FPS = 110
+FPS = 30
 
-zumbi1 = zumbi(zumbi_img)
-zumbi2 = zumbi(zumbi_img)
+zumbis = pygame.sprite.Group()
+for i in range(3):
+    zumbi = Zumbi(zumbi_img)
+    zumbis.add(zumbi)
 
 while game:
     clock.tick(FPS)
@@ -49,12 +51,10 @@ while game:
         if event.type == pygame.QUIT:
             game = False
 
-    zumbi1.update()
-    zumbi2.update()
+    zumbis.update() 
 
     window.blit(background, (0, 0))
-    window.blit(zumbi1.image, zumbi1.rect)
-    window.blit(zumbi2.image, zumbi2.rect)
+    zumbis.draw(window)
 
     pygame.display.update()
 
