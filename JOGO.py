@@ -3,16 +3,15 @@ import random
 
 pygame.init()
 
-WIDTH = 1000
+WIDTH = 1200
 HEIGHT = 800
-
 window = pygame.display.set_mode((WIDTH,HEIGHT))
 pygame.display.set_caption('DEADLY TARGET')
 
 largura_zumbi = 100
 altura_zumbi = 100
 font = pygame.font.SysFont('Comic Sans', 48)
-background = pygame.image.load('fundo.png').convert()
+background = pygame.image.load('fundo.jpg').convert()
 background = pygame.transform.scale(background, (WIDTH,HEIGHT))
 zumbi_img = pygame.image.load('zumbi.png').convert_alpha()
 zumbi_img = pygame.transform.scale(zumbi_img, (largura_zumbi,altura_zumbi))
@@ -57,16 +56,18 @@ FPS = 30
 
 all_sprites = pygame.sprite.Group()
 all_zumbis = pygame.sprite.Group()
-mira = Mira(mira_img)
-all_sprites.add(mira)
 for i in range(3):
     zumbi = Zumbi(zumbi_img)
     all_sprites.add(zumbi)
     all_zumbis.add(zumbi)
+mira = Mira(mira_img)
+all_sprites.add(mira)
 
 while game:
     clock.tick(FPS)
     for event in pygame.event.get():
+        if event.type == pygame.MOUSEBUTTONDOWN:
+            
         if event.type == pygame.QUIT:
             game = False
 
