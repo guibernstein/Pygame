@@ -17,6 +17,7 @@ background = pygame.transform.scale(background, (WIDTH,HEIGHT))
 zumbi_img = pygame.image.load('zumbi.png').convert_alpha()
 zumbi_img = pygame.transform.scale(zumbi_img, (largura_zumbi,altura_zumbi))
 mira_img = pygame.image.load('Mira.png').convert_alpha()
+mira_img = pygame.transform.scale(mira_img, (80,80))
 
 class Zumbi(pygame.sprite.Sprite):
 
@@ -55,11 +56,13 @@ clock = pygame.time.Clock()
 FPS = 30
 
 all_sprites = pygame.sprite.Group()
+all_zumbis = pygame.sprite.Group()
 mira = Mira(mira_img)
 all_sprites.add(mira)
 for i in range(3):
     zumbi = Zumbi(zumbi_img)
     all_sprites.add(zumbi)
+    all_zumbis.add(zumbi)
 
 while game:
     clock.tick(FPS)
