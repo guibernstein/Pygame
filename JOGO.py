@@ -16,8 +16,10 @@ background = pygame.image.load('fundo.png').convert()
 background = pygame.transform.scale(background, (WIDTH,HEIGHT))
 zumbi_img = pygame.image.load('zumbi.png').convert_alpha()
 zumbi_img = pygame.transform.scale(zumbi_img, (largura_zumbi,altura_zumbi))
+mira_img = pygame.image.load('Mira.png').convert_alpha()
 
 class Zumbi(pygame.sprite.Sprite):
+
     def __init__(self, img):
         pygame.sprite.Sprite.__init__(self)
         
@@ -36,14 +38,28 @@ class Zumbi(pygame.sprite.Sprite):
             self.rect.x = random.randint(0, WIDTH - largura_zumbi)
             self.rect.y = 500
 
+class Mira(pygame.sprite.Sprite):
+
+    def __init__(self,img):
+        pygame.sprite.Sprite.__init__(self)
+
+        self.image = img
+        self.rect = self.image.get_rect(center = (WIDTH/2 ,  HEIGHT/2))
+
+    def update(self):
+
+        self.rect.center = pygame.mouse.get_pos()
+
 game = True
 clock = pygame.time.Clock()
 FPS = 30
 
-zumbis = pygame.sprite.Group()
+all_sprites = pygame.sprite.Group()
+mira = Mira(mira_img)
+all_sprites.add(mira)
 for i in range(3):
     zumbi = Zumbi(zumbi_img)
-    zumbis.add(zumbi)
+    all_sprites.add(zumbi)
 
 while game:
     clock.tick(FPS)
@@ -51,10 +67,10 @@ while game:
         if event.type == pygame.QUIT:
             game = False
 
-    zumbis.update() 
+    all_sprites.update() 
 
     window.blit(background, (0, 0))
-    zumbis.draw(window)
+    all_sprites.draw(window)
 
     pygame.display.update()
 
