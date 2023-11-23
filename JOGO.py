@@ -26,17 +26,27 @@ class Zumbi(pygame.sprite.Sprite):
         self.image = img
         self.rect = self.image.get_rect()
         self.rect.x = random.randint(100, 900)
-        self.rect.y = 500
-        self.speedx = 0.3
-        self.speedy = 6
+        self.rect.y = 400
+        self.speedx = 0.075
+        self.speedy = 1.5
+
+        self.tamanho_original = (largura_zumbi, altura_zumbi)
+    
+    def reset(self):
+
+        self.rect.x = random.randint(100, 900)
+        self.rect.y = 400
     
     def update(self):
+
+        tamanho_aumento = self.rect.y / 2
+        novo_tamanho = (int(self.tamanho_original[0] + tamanho_aumento), int(self.tamanho_original[1] + tamanho_aumento))
+        self.image = pygame.transform.scale(zumbi_img, novo_tamanho)
         self.rect.x += self.speedx
         self.rect.y += self.speedy
 
         if self.rect.top > HEIGHT:
-            self.rect.x = random.randint(0, WIDTH - largura_zumbi)
-            self.rect.y = 500
+            self.reset()
 
 class Mira(pygame.sprite.Sprite):
 
@@ -66,8 +76,8 @@ all_sprites.add(mira)
 while game:
     clock.tick(FPS)
     for event in pygame.event.get():
-        if event.type == pygame.MOUSEBUTTONDOWN:
-            
+        # if event.type == pygame.MOUSEBUTTONDOWN:
+
         if event.type == pygame.QUIT:
             game = False
 
