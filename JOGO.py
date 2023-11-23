@@ -8,8 +8,8 @@ HEIGHT = 800
 window = pygame.display.set_mode((WIDTH,HEIGHT))
 pygame.display.set_caption('DEADLY TARGET')
 
-largura_zumbi = 100
-altura_zumbi = 100
+largura_zumbi = 50
+altura_zumbi = 50
 font = pygame.font.SysFont('Comic Sans', 48)
 background = pygame.image.load('fundo.jpg').convert()
 background = pygame.transform.scale(background, (WIDTH,HEIGHT))
@@ -26,20 +26,20 @@ class Zumbi(pygame.sprite.Sprite):
         self.image = img
         self.rect = self.image.get_rect()
         self.rect.x = random.randint(100, 900)
-        self.rect.y = 400
-        self.speedx = 0.075
-        self.speedy = 1.5
+        self.rect.y = 450
+        self.speedx = -0.3
+        self.speedy = 1
 
         self.tamanho_original = (largura_zumbi, altura_zumbi)
     
     def reset(self):
 
         self.rect.x = random.randint(100, 900)
-        self.rect.y = 400
+        self.rect.y = 450
     
     def update(self):
 
-        tamanho_aumento = self.rect.y / 2
+        tamanho_aumento = self.rect.y / 10
         novo_tamanho = (int(self.tamanho_original[0] + tamanho_aumento), int(self.tamanho_original[1] + tamanho_aumento))
         self.image = pygame.transform.scale(zumbi_img, novo_tamanho)
         self.rect.x += self.speedx
@@ -50,15 +50,20 @@ class Zumbi(pygame.sprite.Sprite):
 
 class Mira(pygame.sprite.Sprite):
 
-    def __init__(self,img):
+    def __init__(self,img, grupo_zumbis):
         pygame.sprite.Sprite.__init__(self)
 
         self.image = img
         self.rect = self.image.get_rect(center = (WIDTH/2 ,  HEIGHT/2))
+        self.grupo_zumbis = grupo_zumbis
 
     def update(self):
 
         self.rect.center = pygame.mouse.get_pos()
+
+        colisoes = pygame.sprite.spritecollide(self, self.grupo_zumbis, True)
+        for zumbi in colisoes:
+            zumbi.reset() 
 
 game = True
 clock = pygame.time.Clock()
@@ -70,7 +75,7 @@ for i in range(3):
     zumbi = Zumbi(zumbi_img)
     all_sprites.add(zumbi)
     all_zumbis.add(zumbi)
-mira = Mira(mira_img)
+mira = Mira(mira_img, all_zumbis)
 all_sprites.add(mira)
 
 while game:
