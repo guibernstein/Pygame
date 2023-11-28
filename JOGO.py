@@ -46,8 +46,6 @@ class Zumbi(pygame.sprite.Sprite):
         self.rect.x += self.speedx
         self.rect.y += self.speedy
 
-        if self.rect.top > HEIGHT:
-            self.reset()
 
 class Mira(pygame.sprite.Sprite):
 
@@ -77,18 +75,20 @@ all_sprites.add(mira)
 while game:
     clock.tick(FPS)
     for event in pygame.event.get():
-        # if event.type == pygame.MOUSEBUTTONDOWN:
-
+        
         if event.type == pygame.QUIT:
             game = False
+        
+        elif event.type == pygame.MOUSEBUTTONDOWN:
+            for zumbi in all_zumbis:
+                if zumbi.rect.collidepoint(pygame.mouse.get_pos()):
+                    zumbi.reset()
 
     all_sprites.update()
 
-    colisoes = pygame.sprite.spritecollide(mira, all_zumbis, True)
-    for zumbi in colisoes:
-        z = Zumbi(zumbi_img)
-        all_sprites.add(z)
-        all_zumbis.add(z) 
+    for zumbi in all_zumbis:
+        if zumbi.rect.bottom >= HEIGHT:
+            game = False
 
     window.blit(background, (0, 0))
     all_sprites.draw(window)
