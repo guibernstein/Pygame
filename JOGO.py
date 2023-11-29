@@ -11,7 +11,6 @@ pygame.display.set_caption('DEADLY TARGET')
 
 largura_zumbi = 50
 altura_zumbi = 50
-font = pygame.font.SysFont('Comic Sans', 48)
 background = pygame.image.load('fundo.jpg').convert()
 background = pygame.transform.scale(background, (WIDTH,HEIGHT))
 zumbi_img = pygame.image.load('zumbi.png').convert_alpha()
@@ -19,6 +18,9 @@ zumbi_img = pygame.transform.scale(zumbi_img, (largura_zumbi,altura_zumbi))
 mira_img = pygame.image.load('Mira.png').convert_alpha()
 mira_img = pygame.transform.scale(mira_img, (80,80))
 score_font = pygame.font.Font('HelpMe.ttf',50)
+
+pygame.mixer.music.load('audio.mp3')
+pygame.mixer.music.set_volume(0.4)
 
 class Zumbi(pygame.sprite.Sprite):
 
@@ -29,19 +31,19 @@ class Zumbi(pygame.sprite.Sprite):
         self.rect = self.image.get_rect()
         self.rect.x = random.randint(0, WIDTH - largura_zumbi) 
         self.rect.y = 450
-        self.speedx = -0.3
+        self.speedx = -0.4
         self.speedy = 1
 
         self.tamanho_original = (largura_zumbi, altura_zumbi)
     
     def reset(self):
 
-        self.rect.x = random.randint(0, WIDTH - largura_zumbi)
+        self.rect.x = random.randint(0, WIDTH - 2*largura_zumbi)
         self.rect.y = 450
     
     def update(self):
 
-        tamanho_aumento = self.rect.y / 5
+        tamanho_aumento = self.rect.y / 3
         novo_tamanho = (int(self.tamanho_original[0] + tamanho_aumento), int(self.tamanho_original[1] + tamanho_aumento))
         self.image = pygame.transform.scale(zumbi_img, novo_tamanho)
         self.rect.x += self.speedx
@@ -76,6 +78,8 @@ all_sprites.add(mira)
 score = 0
 zumbi_added = False
 
+pygame.mixer.music.play(loops=-1)
+
 while game:
     clock.tick(FPS)
     for event in pygame.event.get():
@@ -85,7 +89,8 @@ while game:
         
         elif event.type == pygame.MOUSEBUTTONDOWN:
             for zumbi in all_zumbis:
-                if zumbi.rect.collidepoint(pygame.mouse.get_pos()):
+                area_colisao_ampliada = zumbi.rect.inflate(100, 100)
+                if area_colisao_ampliada.collidepoint(pygame.mouse.get_pos()):
                     zumbi.reset()
                     score += 100
     
