@@ -4,7 +4,7 @@ import time
 
 pygame.init()
 
-WIDTH = 1200
+WIDTH = 1550
 HEIGHT = 800
 window = pygame.display.set_mode((WIDTH, HEIGHT))
 pygame.display.set_caption('DEADLY TARGET')
@@ -68,8 +68,23 @@ class Mira(pygame.sprite.Sprite):
 
         self.rect.center = pygame.mouse.get_pos()
 
-def mensagem(texto, cor, tamanho, posicao):
-    fonte = pygame.font.SysFont(None, tamanho)
+def mensagem(texto, cor, posicao):
+    fonte = pygame.font.Font('HelpMe.ttf',35)
+    texto = fonte.render(texto, True, cor)
+    window.blit(texto, posicao)
+
+def mensagem2(texto, cor, posicao):
+    fonte = pygame.font.Font('HelpMe.ttf',50)
+    texto = fonte.render(texto, True, cor)
+    window.blit(texto, posicao)
+
+def mensagem3(texto, cor, posicao):
+    fonte = pygame.font.Font('HelpMe.ttf',80)
+    texto = fonte.render(texto, True, cor)
+    window.blit(texto, posicao)
+
+def mensagem4(texto, cor, posicao):
+    fonte = pygame.font.Font('HelpMe.ttf',30)
     texto = fonte.render(texto, True, cor)
     window.blit(texto, posicao)
 
@@ -86,8 +101,14 @@ def tela_inicial():
                     inicio = False
 
         window.fill((0, 0, 0))
-        mensagem("VOCÊ ACORDA DE MADRUGADA E PERCEBE QUE O APOCALIPSE QUE TANTO FALAVAM DE FATO ERA VERDADE. VOCÊ PEGA SUA ARMA E SAI CORRENDO EM DIREÇÃO AO QUINTAL. VOCÊ TEM O QUE É NECESÁRIO PARA PROTEGER QUEM AMA?", (255, 255, 255), 30, (50, 50))
-        mensagem("Pressione ENTER para começar", (255, 255, 255), 30, (300, 700))
+        mensagem3("DEADLY TARGET", (255,0,0), (450,50))
+        mensagem("VOCE ACORDA DE MADRUGADA E PERCEBE QUE O", (255, 255, 255),(320, 200))
+        mensagem(" APOCALIPSE QUE TANTO FALAVAM DE FATO ERA REAL.", (255, 255, 255), (270, 280))
+        mensagem("VOCE PEGA SUA ARMA E SAI CORRENDO",(255, 255, 255),(390, 380))
+        mensagem("EM DIREÇAO AO QUINTAL AO OUVIR O SOM DOS ZUMBIS.",(255, 255, 255), (220, 460))
+        mensagem2("VOCE TEM O QUE E NECESSARIO PARA SALVAR TODOS?",(255,0,0), (45,560))
+        mensagem4("DICA: OS ZUMBIS SO MORREM COM TIROS NA CABEÇA",(255,0,0),(340,630))
+        mensagem("Pressione ENTER para começar", (255, 255, 255),(450, 700))
         pygame.display.update()
 
 def main():
