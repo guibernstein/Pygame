@@ -28,6 +28,9 @@ som_zumbis.set_volume(0.2)
 som_bala = pygame.mixer.Sound('bala.mp3')
 som_bala.set_volume(0.1)
 
+som_grito = pygame.mixer.Sound("grito.mp3")
+som_grito.set_volume(0.4)
+
 class Zumbi(pygame.sprite.Sprite):
 
     def __init__(self, img):
@@ -111,6 +114,41 @@ def tela_inicial():
         mensagem("Pressione ENTER para começar", (255, 255, 255),(450, 700))
         pygame.display.update()
 
+def end_game():
+    fim = True
+
+    while fim:
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                pygame.quit()
+                quit()
+            elif event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_RETURN:
+                    inicio = True
+                    main()
+                else:
+                    pygame.quit()
+                    quit()
+        window.fill((0, 0, 0))
+        mensagem4("A noite se estendeu, implacavel, testando sua coragem e habilidade. Mas, apesar",(255,255,255),(50,50))
+        mensagem4("de seus esforços, a invasao zumbi provou ser insuperavel. O som de passos",(255,255,255),(70,100))
+        mensagem4("arrastados se intensifica, indicando que os mortos-vivos continuam a se multiplicar.",(255,255,255),(0,150))
+        mensagem4("Exausto e desgastado, voce e cercado por uma mare interminavel de zumbis famintos. ",(255,255,255),(5,200))
+        mensagem4("A escuridão engole seu último suspiro de esperança, enquanto as criaturas se",(255,255,255),(60,250))
+        mensagem4("aproximam, determinadas a reivindicar mais uma vítima. eu destino é selado pela",(255,255,255),(55,300))
+        mensagem4("mordida de um zumbi, marcando o fim de sua resistência.  A visão embaça enquanto",(255,255,255),(20,350))
+        mensagem4("as forças da escuridão triunfam sobre sua luta solitária. Seu nome, agora esquecido,",(255,255,255),(0,400))
+        mensagem4("e apenas mais um eco perdido em um mundo tomado pelos mortos. O apocalipse",(255,255,255),(30,450))
+        mensagem4("zumbi nao concedeu perdao, e sua jornada chegou a um fim sombrio. Seu sacrificio",(255,255,255),(20,500))
+        mensagem4("nao foi suficiente para salvar aqueles que amava, e agora, você se junta às fileiras",(255,255,255),(10,550))
+        mensagem4("dos que caminham sem proposito, uma sombra de sua antiga humanidade.",(255,255,255),(100,600))
+        mensagem2("O FIM?", (255,0,0), (680,650))
+        mensagem4("PRESSIONE ENTER PARA JOGAR DE NOVO OU QUALQUER OUTRA TELA PARA SAIR DO JOGO",(255,0,0), (60,720))
+       
+
+
+        pygame.display.update()   
+
 def main():
     game = True
     clock = pygame.time.Clock()
@@ -137,6 +175,7 @@ def main():
 
             if event.type == pygame.QUIT:
                 game = False
+                quit()
 
             elif event.type == pygame.MOUSEBUTTONDOWN:
                 som_bala.play()
@@ -162,7 +201,9 @@ def main():
 
         for zumbi in all_zumbis:
             if zumbi.rect.bottom >= HEIGHT:
+                som_grito.play()
                 game = False
+
 
         window.blit(background, (0, 0))
         all_sprites.draw(window)
@@ -174,7 +215,6 @@ def main():
 
         pygame.display.update()
 
-    pygame.quit()
-
 tela_inicial()
 main()
+end_game()
