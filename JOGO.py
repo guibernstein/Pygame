@@ -31,6 +31,9 @@ som_bala.set_volume(0.1)
 som_grito = pygame.mixer.Sound("grito.mp3")
 som_grito.set_volume(0.4)
 
+zumbi_morrendo = pygame.mixer.Sound("zumbi morrendo.mp3")
+zumbi_morrendo.set_volume(0.4)
+
 class Zumbi(pygame.sprite.Sprite):
 
     def __init__(self, img):
@@ -232,7 +235,8 @@ def main():
 
         all_sprites.update()
 
-        if score >= 100:
+        if score >= 10000:
+            zumbi_morrendo.play()
             game = False
             end_game_bom()
 
