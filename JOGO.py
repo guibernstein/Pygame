@@ -22,6 +22,13 @@ score_font = pygame.font.Font('HelpMe.ttf',50)
 pygame.mixer.music.load('audio.mp3')
 pygame.mixer.music.set_volume(0.4)
 
+pygame.mixer.music.load('zumbis.mp3')
+pygame.mixer.music.set_volume(0.2)
+
+
+som_bala = pygame.mixer.Sound('bala.mp3')
+som_bala.set_volume(0.1)
+
 class Zumbi(pygame.sprite.Sprite):
 
     def __init__(self, img):
@@ -88,6 +95,7 @@ while game:
             game = False
         
         elif event.type == pygame.MOUSEBUTTONDOWN:
+            som_bala.play()
             for zumbi in all_zumbis:
                 area_colisao_ampliada = zumbi.rect.inflate(100, 100)
                 if area_colisao_ampliada.collidepoint(pygame.mouse.get_pos()):
