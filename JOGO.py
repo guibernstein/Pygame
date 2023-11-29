@@ -6,25 +6,24 @@ pygame.init()
 
 WIDTH = 1200
 HEIGHT = 800
-window = pygame.display.set_mode((WIDTH,HEIGHT))
+window = pygame.display.set_mode((WIDTH, HEIGHT))
 pygame.display.set_caption('DEADLY TARGET')
 
 largura_zumbi = 50
 altura_zumbi = 50
 background = pygame.image.load('fundo.jpg').convert()
-background = pygame.transform.scale(background, (WIDTH,HEIGHT))
+background = pygame.transform.scale(background, (WIDTH, HEIGHT))
 zumbi_img = pygame.image.load('zumbi.png').convert_alpha()
-zumbi_img = pygame.transform.scale(zumbi_img, (largura_zumbi,altura_zumbi))
+zumbi_img = pygame.transform.scale(zumbi_img, (largura_zumbi, altura_zumbi))
 mira_img = pygame.image.load('Mira.png').convert_alpha()
-mira_img = pygame.transform.scale(mira_img, (80,80))
-score_font = pygame.font.Font('HelpMe.ttf',50)
+mira_img = pygame.transform.scale(mira_img, (80, 80))
+score_font = pygame.font.Font('HelpMe.ttf', 50)
 
 pygame.mixer.music.load('audio.mp3')
 pygame.mixer.music.set_volume(0.4)
 
-pygame.mixer.music.load('zumbis.mp3')
-pygame.mixer.music.set_volume(0.2)
-
+som_zumbis = pygame.mixer.Sound('zumbis.mp3')
+som_zumbis.set_volume(0.2)
 
 som_bala = pygame.mixer.Sound('bala.mp3')
 som_bala.set_volume(0.1)
@@ -69,66 +68,92 @@ class Mira(pygame.sprite.Sprite):
 
         self.rect.center = pygame.mouse.get_pos()
 
-game = True
-clock = pygame.time.Clock()
-FPS = 30
+def mensagem(texto, cor, tamanho, posicao):
+    fonte = pygame.font.SysFont(None, tamanho)
+    texto = fonte.render(texto, True, cor)
+    window.blit(texto, posicao)
 
-all_sprites = pygame.sprite.Group()
-all_zumbis = pygame.sprite.Group()
-for i in range(3):
-    zumbi = Zumbi(zumbi_img)
-    all_sprites.add(zumbi)
-    all_zumbis.add(zumbi)
-mira = Mira(mira_img)
-all_sprites.add(mira)
+def tela_inicial():
+    inicio = True
 
-score = 0
-zumbi_added = False
+    while inicio:
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                pygame.quit()
+                quit()
+            elif event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_RETURN:
+                    inicio = False
 
-pygame.mixer.music.play(loops=-1)
+        window.fill((0, 0, 0))
+        mensagem("VOCÊ ACORDA DE MADRUGADA E PERCEBE QUE O APOCALIPSE QUE TANTO FALAVAM DE FATO ERA VERDADE. VOCÊ PEGA SUA ARMA E SAI CORRENDO EM DIREÇÃO AO QUINTAL. VOCÊ TEM O QUE É NECESÁRIO PARA PROTEGER QUEM AMA?", (255, 255, 255), 30, (50, 50))
+        mensagem("Pressione ENTER para começar", (255, 255, 255), 30, (300, 700))
+        pygame.display.update()
 
-while game:
-    clock.tick(FPS)
-    for event in pygame.event.get():
-        
-        if event.type == pygame.QUIT:
-            game = False
-        
-        elif event.type == pygame.MOUSEBUTTONDOWN:
-            som_bala.play()
-            for zumbi in all_zumbis:
-                area_colisao_ampliada = zumbi.rect.inflate(100, 100)
-                if area_colisao_ampliada.collidepoint(pygame.mouse.get_pos()):
-                    zumbi.reset()
-                    score += 100
-    
+def main():
+    game = True
+    clock = pygame.time.Clock()
+    FPS = 30
 
-    if score != 0 and score % 2000 == 0 and not zumbi_added:
-        novo_zumbi = Zumbi(zumbi_img)
-        all_sprites.add(novo_zumbi)
-        all_zumbis.add(novo_zumbi)
-        zumbi_added = True
+    all_sprites = pygame.sprite.Group()
+    all_zumbis = pygame.sprite.Group()
+    for i in range(3):
+        zumbi = Zumbi(zumbi_img)
+        all_sprites.add(zumbi)
+        all_zumbis.add(zumbi)
+    mira = Mira(mira_img)
+    all_sprites.add(mira)
 
-        nova_mira = Mira(mira_img)
-        all_sprites.add(nova_mira)
+    score = 0
+    zumbi_added = False
 
-    if score % 2000 != 0:
-        zumbi_added = False
+    pygame.mixer.music.play(loops=-1)
+    som_zumbis.play(loops=-1)
 
-    all_sprites.update()
+    while game:
+        clock.tick(FPS)
+        for event in pygame.event.get():
 
-    for zumbi in all_zumbis:
-        if zumbi.rect.bottom >= HEIGHT:
-            game = False
+            if event.type == pygame.QUIT:
+                game = False
 
-    window.blit(background, (0, 0))
-    all_sprites.draw(window)
+            elif event.type == pygame.MOUSEBUTTONDOWN:
+                som_bala.play()
+                for zumbi in all_zumbis:
+                    area_colisao_ampliada = zumbi.rect.inflate(100, 100)
+                    if area_colisao_ampliada.collidepoint(pygame.mouse.get_pos()):
+                        zumbi.reset()
+                        score += 100
 
-    text_surface = score_font.render("SCORE:{:06d}".format(score), True, (255, 0, 0))
-    text_rect = text_surface.get_rect()
-    text_rect.midtop = (WIDTH / 2,  10)
-    window.blit(text_surface, text_rect)
+        if score != 0 and score % 2000 == 0 and not zumbi_added:
+            novo_zumbi = Zumbi(zumbi_img)
+            all_sprites.add(novo_zumbi)
+            all_zumbis.add(novo_zumbi)
+            zumbi_added = True
 
-    pygame.display.update()
+            nova_mira = Mira(mira_img)
+            all_sprites.add(nova_mira)
 
-pygame.quit()
+        if score % 2000 != 0:
+            zumbi_added = False
+
+        all_sprites.update()
+
+        for zumbi in all_zumbis:
+            if zumbi.rect.bottom >= HEIGHT:
+                game = False
+
+        window.blit(background, (0, 0))
+        all_sprites.draw(window)
+
+        text_surface = score_font.render("SCORE:{:06d}".format(score), True, (255, 0, 0))
+        text_rect = text_surface.get_rect()
+        text_rect.midtop = (WIDTH / 2, 10)
+        window.blit(text_surface, text_rect)
+
+        pygame.display.update()
+
+    pygame.quit()
+
+tela_inicial()
+main()
