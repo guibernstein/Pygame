@@ -41,7 +41,7 @@ class Zumbi(pygame.sprite.Sprite):
         self.rect.x = random.randint(0, WIDTH - largura_zumbi) 
         self.rect.y = 450
         self.speedx = -0.4
-        self.speedy = 1
+        self.speedy = 0.8
 
         self.tamanho_original = (largura_zumbi, altura_zumbi)
     
@@ -52,7 +52,7 @@ class Zumbi(pygame.sprite.Sprite):
     
     def update(self):
 
-        tamanho_aumento = self.rect.y / 3
+        tamanho_aumento = self.rect.y/2
         novo_tamanho = (int(self.tamanho_original[0] + tamanho_aumento), int(self.tamanho_original[1] + tamanho_aumento))
         self.image = pygame.transform.scale(zumbi_img, novo_tamanho)
         self.rect.x += self.speedx
@@ -114,10 +114,43 @@ def tela_inicial():
         mensagem("Pressione ENTER para começar", (255, 255, 255),(450, 700))
         pygame.display.update()
 
-def end_game():
-    fim = True
+def end_game_bom():
+    fim_bom = True
 
-    while fim:
+    while fim_bom:
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                pygame.quit()
+                quit()
+            elif event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_RETURN:
+                    inicio = True
+                    main()
+                else:
+                    pygame.quit()
+                    quit()
+        window.fill((0, 0, 0))
+        mensagem4("Tendo enfrentado hordas interminaveis de zumbis e demonstrado uma mira impecavel,",(255,255,255),(20,50))
+        mensagem4("voce conseguiu sobreviver a noite apocaliptica. O amanhecer revela silhuetas",(255,255,255),(70,100))
+        mensagem4("desaparecendo ao longe, enquanto o som distante de sirenes indica a chegada dos",(255,255,255),(30,150))
+        mensagem4("socorristas. Voce permanece de pe, exausto, mas triunfante. Seu quintal, outrora",(255,255,255),(30,200))
+        mensagem4("invadido pelos mortos-vivos, agora esta calmo. A cidade, um cenario de caos,",(255,255,255),(60,250))
+        mensagem4("começa a mostrar sinais de recuperaçao. Os sobreviventes começam a emergir dos",(255,255,255),(30,300))
+        mensagem4("esconderijos, agradecendo a coragem e habilidade que você demonstrou.",(255,255,255),(100,350))
+        mensagem4("As autoridades chegam para restabelecer a ordem, e voce, o heroi improvavel,",(255,255,255),(50,400))
+        mensagem4("e reconhecido por sua valentia. A comunidade se une para reconstruir,",(255,255,255),(120,450))
+        mensagem4("prometendo não esquecer os eventos dessa noite terrivel. Voce olha para o",(255,255,255),(100,500))
+        mensagem4("horizonte, sabendo que o perigo pode não ter totalmente desaparecido, mas",(255,255,255),(50,550))
+        mensagem4("confiante de que sua determinação e destreza foram fundamentais para salvar vidas.",(255,255,255),(0,600))
+        mensagem2("O FIM?", (255,0,0), (680,650))
+        mensagem4("PRESSIONE ENTER PARA JOGAR DE NOVO OU QUALQUER OUTRA TELA PARA SAIR DO JOGO",(255,0,0), (60,720))
+
+        pygame.display.update()
+
+def end_game_ruim():
+    fim_ruim = True
+
+    while fim_ruim:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 pygame.quit()
@@ -135,8 +168,8 @@ def end_game():
         mensagem4("arrastados se intensifica, indicando que os mortos-vivos continuam a se multiplicar.",(255,255,255),(0,150))
         mensagem4("Exausto e desgastado, voce e cercado por uma mare interminavel de zumbis famintos. ",(255,255,255),(5,200))
         mensagem4("A escuridão engole seu último suspiro de esperança, enquanto as criaturas se",(255,255,255),(60,250))
-        mensagem4("aproximam, determinadas a reivindicar mais uma vítima. eu destino é selado pela",(255,255,255),(55,300))
-        mensagem4("mordida de um zumbi, marcando o fim de sua resistência.  A visão embaça enquanto",(255,255,255),(20,350))
+        mensagem4("aproximam, determinadas a reivindicar mais uma vitima. Seu destino e selado pela",(255,255,255),(55,300))
+        mensagem4("mordida de um zumbi, marcando o fim de sua resistencia. A visao embaça enquanto",(255,255,255),(20,350))
         mensagem4("as forças da escuridão triunfam sobre sua luta solitária. Seu nome, agora esquecido,",(255,255,255),(0,400))
         mensagem4("e apenas mais um eco perdido em um mundo tomado pelos mortos. O apocalipse",(255,255,255),(30,450))
         mensagem4("zumbi nao concedeu perdao, e sua jornada chegou a um fim sombrio. Seu sacrificio",(255,255,255),(20,500))
@@ -199,6 +232,10 @@ def main():
 
         all_sprites.update()
 
+        if score >= 100:
+            game = False
+            end_game_bom()
+
         for zumbi in all_zumbis:
             if zumbi.rect.bottom >= HEIGHT:
                 som_grito.play()
@@ -217,4 +254,4 @@ def main():
 
 tela_inicial()
 main()
-end_game()
+end_game_ruim()
